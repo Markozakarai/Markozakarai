@@ -1,0 +1,823 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NODY ❤️ My Universe</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Alexandria:wght@400;800;900&family=Dancing+Script:wght@700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --primary-pink: #ff4d6d;
+        --neon-glow: rgba(255, 77, 109, 0.6);
+        --bg-dark: #08081a;
+        --accent-gold: #ffd166;
+        --gold-glow: rgba(255, 209, 102, 0.4);
+        --card-base: linear-gradient(135deg, #1a0b1a 0%, #0d0d2b 100%);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background-color: var(--bg-dark);
+        color: white;
+        font-family: "Cairo", sans-serif;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+      }
+
+      /* === 1. شاشة التحميل === */
+      #preloader {
+        position: fixed;
+        inset: 0;
+        z-index: 20000;
+        background: #08081a;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: 1s;
+      }
+      .loader-circle {
+        width: 80px;
+        height: 80px;
+        border: 4px solid rgba(255, 77, 109, 0.1);
+        border-top: 4px solid var(--primary-pink);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        box-shadow: 0 0 15px var(--neon-glow);
+        margin-bottom: 25px;
+      }
+      .loader-text {
+        font-family: "Alexandria";
+        font-size: 1.5rem;
+        animation: pulseText 1.5s infinite;
+        text-shadow: 0 0 10px var(--neon-glow);
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes pulseText {
+        0%,
+        100% {
+          opacity: 0.5;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      /* === 2. شاشة الباسورد === */
+      #login-screen {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        background: radial-gradient(circle at center, #1a0b2e 0%, #08081a 100%);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: 1s;
+      }
+      .login-wrapper {
+        text-align: center;
+        width: 90%;
+        max-width: 500px;
+      }
+      .password-container {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-bottom: 30px;
+        direction: ltr;
+      }
+      .pass-input {
+        width: 65px;
+        height: 85px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 18px;
+        color: var(--primary-pink);
+        font-size: 3rem;
+        font-weight: 900;
+        text-align: center;
+        text-transform: uppercase;
+        outline: none;
+        transition: 0.3s;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+      .pass-input.active {
+        border-color: var(--primary-pink);
+        box-shadow: 0 0 30px var(--neon-glow);
+        transform: translateY(-5px);
+      }
+
+      /* === 3. المحتوى الرئيسي === */
+      #main-content {
+        display: none;
+        opacity: 0;
+        transition: 1.5s ease;
+        height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+      #star-container {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+      }
+      .star {
+        position: absolute;
+        background: white;
+        border-radius: 50%;
+        animation: blink var(--t) infinite ease-in-out;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 0.1;
+        }
+        50% {
+          opacity: 0.8;
+        }
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 60px 20px;
+        text-align: center;
+      }
+      header h1 {
+        font-family: "Alexandria";
+        font-size: clamp(3rem, 10vw, 5rem);
+        text-shadow: 0 0 20px var(--neon-glow);
+        margin-bottom: 40px;
+      }
+
+      /* أول مرة اتقابلنا */
+      .first-meet-container {
+        position: relative;
+        max-width: 700px;
+        margin: 0 auto 60px;
+        padding: 3px;
+        background: linear-gradient(
+          45deg,
+          var(--accent-gold),
+          var(--primary-pink),
+          var(--accent-gold)
+        );
+        border-radius: 40px;
+        box-shadow:
+          0 10px 40px rgba(0, 0, 0, 0.6),
+          0 0 20px var(--gold-glow);
+        animation: cardPulse 3s ease-in-out infinite;
+      }
+      .first-meet-card {
+        background: #0d0d2b;
+        padding: 40px 20px;
+        border-radius: 37px;
+        position: relative;
+        overflow: hidden;
+      }
+      .first-meet-card h3 {
+        font-family: "Alexandria";
+        color: var(--accent-gold);
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+        text-shadow: 0 0 10px var(--gold-glow);
+      }
+      .first-meet-card .date-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        margin: 10px 0;
+      }
+      .date-shimmer {
+        font-size: clamp(2.5rem, 8vw, 3.8rem);
+        font-weight: 900;
+        font-family: "Alexandria";
+        background: linear-gradient(to bottom, #fff 30%, var(--accent-gold));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 0 15px rgba(255, 209, 102, 0.5));
+      }
+      .sparkle-icon {
+        font-size: 1.5rem;
+        filter: drop-shadow(0 0 5px var(--accent-gold));
+      }
+      .first-meet-card p {
+        font-style: italic;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1.1rem;
+        margin-top: 15px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 15px;
+      }
+      @keyframes cardPulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.02);
+        }
+      }
+
+      /* العداد */
+      .timer-grid {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        margin-bottom: 50px;
+      }
+      .timer-box {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 15px;
+        border-radius: 20px;
+        width: 85px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+      .timer-box .num {
+        display: block;
+        font-size: 1.6rem;
+        font-weight: 900;
+        font-family: "Alexandria";
+        color: #fff;
+      }
+      .timer-box .label {
+        font-size: 0.8rem;
+        color: var(--primary-pink);
+        font-weight: bold;
+      }
+
+      /* الكروت */
+      .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 30px;
+        margin-bottom: 80px;
+        perspective: 1500px;
+      }
+      .card-box {
+        position: relative;
+        height: 380px;
+        cursor: pointer;
+        background: var(--card-base);
+        border-radius: 35px;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: 0.4s;
+      }
+      .card-box:hover {
+        transform: translateY(-10px);
+        border-color: rgba(255, 77, 109, 0.3);
+        box-shadow: 0 20px 40px rgba(255, 77, 109, 0.1);
+      }
+      .card-front,
+      .card-back {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        padding: 30px;
+        backface-visibility: hidden;
+      }
+      .card-front .icon {
+        font-size: 4.5rem;
+        margin-bottom: 20px;
+        filter: drop-shadow(0 0 15px var(--primary-pink));
+      }
+      .card-front p {
+        font-family: "Alexandria";
+        font-weight: 700;
+        color: #ccc;
+        font-size: 1.1rem;
+      }
+      .card-back {
+        opacity: 0;
+        transform: scale(0.8);
+        pointer-events: none;
+        background: rgba(255, 77, 109, 0.08);
+        backdrop-filter: blur(5px);
+      }
+      .card-box.active .card-front {
+        opacity: 0;
+        transform: scale(1.1);
+      }
+      .card-box.active .card-back {
+        opacity: 1;
+        transform: scale(1);
+        pointer-events: auto;
+      }
+      .word-3d {
+        font-family: "Alexandria";
+        font-size: 2.5rem;
+        font-weight: 900;
+        color: white;
+        text-align: center;
+        text-shadow: 0 0 25px var(--primary-pink);
+        line-height: 1.3;
+      }
+
+      /* === قسم التريندات الجديد (8 صور) === */
+      .trends-section {
+        margin-bottom: 80px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 40px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .trends-section h2 {
+        font-family: "Alexandria";
+        font-size: 2.8rem;
+        margin-bottom: 50px;
+        color: #fff;
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+      }
+      .trends-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 25px;
+      }
+      .trend-item {
+        position: relative;
+        border-radius: 30px;
+        overflow: hidden;
+        height: 320px;
+        cursor: pointer;
+        border: 2px solid rgba(255, 255, 255, 0.05);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .trend-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: 0.6s;
+        filter: grayscale(30%);
+      }
+      .trend-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to top,
+          rgba(8, 8, 26, 0.95) 0%,
+          rgba(8, 8, 26, 0.5) 50%,
+          transparent 100%
+        );
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding: 30px;
+        opacity: 0;
+        transition: 0.5s;
+      }
+      .trend-overlay p {
+        font-family: "Cairo";
+        font-size: 1.7rem;
+        font-weight: 800;
+        color: white;
+        text-align: center;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        transform: translateY(20px);
+        transition: 0.5s;
+      }
+
+      /* تاثيرات الـ Hover للتريندات */
+      .trend-item:hover {
+        transform: translateY(-10px) scale(1.03);
+        border-color: var(--primary-pink);
+        box-shadow: 0 20px 40px rgba(255, 77, 109, 0.2);
+      }
+      .trend-item:hover img {
+        transform: scale(1.1);
+        filter: grayscale(0%) blur(2px);
+      }
+      .trend-item:hover .trend-overlay {
+        opacity: 1;
+      }
+      .trend-item:hover .trend-overlay p {
+        transform: translateY(0);
+      }
+
+      /* الفاصل والزر */
+      .section-divider {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 80px 0;
+      }
+      .line {
+        height: 2px;
+        flex: 1;
+        background: linear-gradient(
+          to right,
+          transparent,
+          var(--primary-pink),
+          transparent
+        );
+        box-shadow: 0 0 10px var(--neon-glow);
+      }
+      .divider-heart {
+        font-size: 2rem;
+        margin: 0 30px;
+        animation: heartPulse 1.5s infinite;
+        filter: drop-shadow(0 0 10px var(--primary-pink));
+        color: var(--primary-pink);
+      }
+      .magic-btn {
+        background: var(--primary-pink);
+        border: none;
+        padding: 22px 60px;
+        font-size: 1.6rem;
+        font-weight: 900;
+        border-radius: 100px;
+        cursor: pointer;
+        font-family: "Alexandria";
+        box-shadow: 0 0 30px var(--neon-glow);
+        margin-bottom: 60px;
+        color: white;
+        transition: 0.3s;
+      }
+      .magic-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 50px var(--primary-pink);
+      }
+
+      /* التوقيع والمودال */
+      footer {
+        padding-bottom: 40px;
+        opacity: 0.7;
+        font-size: 0.9rem;
+        font-family: "Alexandria";
+        color: #aaa;
+      }
+      .designer-name {
+        color: var(--primary-pink);
+        font-weight: 800;
+        text-transform: uppercase;
+        animation: pulseText 2s infinite;
+      }
+      .modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.92);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 11000;
+        backdrop-filter: blur(10px);
+      }
+      .modal-content {
+        background: #0f0f2d;
+        padding: 50px;
+        border-radius: 40px;
+        max-width: 600px;
+        text-align: center;
+        width: 90%;
+        border: 2px solid var(--primary-pink);
+        box-shadow: 0 0 50px rgba(255, 77, 109, 0.3);
+      }
+      #typing-text {
+        font-size: 1.5rem;
+        line-height: 1.8;
+        font-weight: bold;
+        color: #fff;
+        font-family: "Cairo";
+      }
+    </style>
+  </head>
+  <body>
+    <div id="preloader">
+      <div class="loader-circle"></div>
+      <div class="loader-text">ثواني يا روحي معلش..</div>
+    </div>
+
+    <div id="login-screen">
+      <div class="login-wrapper">
+        <h2 style="margin-bottom: 50px; font-family: Alexandria; color: white">
+          مساحة نودي الخاصة ❤️
+        </h2>
+        <div class="password-container">
+          <input type="text" class="pass-input" maxlength="1" id="char1" />
+          <input type="text" class="pass-input" maxlength="1" id="char2" />
+          <input type="text" class="pass-input" maxlength="1" id="char3" />
+          <input type="text" class="pass-input" maxlength="1" id="char4" />
+        </div>
+        <p
+          id="error-msg"
+          style="
+            color: #ff4d6d;
+            display: none;
+            font-weight: bold;
+            margin-top: 25px;
+            animation: shake 0.5s;
+          "
+        >
+          الباسورد غلط يا نودي.. ركزي 😉 (L O V E)
+        </p>
+      </div>
+    </div>
+
+    <div id="main-content">
+      <div id="star-container"></div>
+      <div class="container">
+        <header><h1>❤️ NODY ❤️</h1></header>
+
+        <div class="first-meet-container">
+          <div class="first-meet-card">
+            <h3>أول مرة اتقابلنا ✨</h3>
+            <div class="date-wrapper">
+              <span class="sparkle-icon">⭐</span>
+              <div class="date-shimmer">04 . 04 . 2021</div>
+              <span class="sparkle-icon">⭐</span>
+            </div>
+            <p>اليوم الذي أضاء حياتي بوجودكِ فيها..</p>
+          </div>
+        </div>
+
+        <div class="timer-grid">
+          <div class="timer-box">
+            <span class="num" id="years">0</span><span class="label">سنة</span>
+          </div>
+          <div class="timer-box">
+            <span class="num" id="months">0</span><span class="label">شهر</span>
+          </div>
+          <div class="timer-box">
+            <span class="num" id="days">0</span><span class="label">يوم</span>
+          </div>
+          <div class="timer-box">
+            <span class="num" id="hours">0</span><span class="label">ساعة</span>
+          </div>
+          <div class="timer-box">
+            <span class="num" id="minutes">0</span
+            ><span class="label">دقيقة</span>
+          </div>
+          <div class="timer-box">
+            <span class="num" id="seconds">0</span
+            ><span class="label">ثانية</span>
+          </div>
+        </div>
+
+        <div class="cards-grid">
+          <div class="card-box" onclick="this.classList.toggle('active')">
+            <div class="card-front">
+              <div class="icon">🎁</div>
+              <p>دوسي هنا يا نودي</p>
+            </div>
+            <div class="card-back"><span class="word-3d">كـل</span></div>
+          </div>
+          <div class="card-box" onclick="this.classList.toggle('active')">
+            <div class="card-front">
+              <div class="icon">✨</div>
+              <p>وهنا كمان</p>
+            </div>
+            <div class="card-back"><span class="word-3d">سـنـة</span></div>
+          </div>
+          <div class="card-box" onclick="this.classList.toggle('active')">
+            <div class="card-front">
+              <div class="icon">⭐</div>
+              <p>لسه فيه تاني</p>
+            </div>
+            <div class="card-back"><span class="word-3d">وانـتـي</span></div>
+          </div>
+          <div class="card-box" onclick="this.classList.toggle('active')">
+            <div class="card-front">
+              <div class="icon">💖</div>
+              <p>آخر كارت</p>
+            </div>
+            <div class="card-back">
+              <span class="word-3d" style="font-size: 1.4rem"
+                >معايا يا روح قلبي ونفضل مع بعض العمر كله</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <section class="trends-section">
+          <h2>ترينداتنا سوا ✨</h2>
+          <div class="trends-grid">
+            <div class="trend-item">
+              <img
+                src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500"
+                alt="Trend 1"
+              />
+              <div class="trend-overlay"><p>بنتى قبل ما تكونى حبيبتى❤️</p></div>
+            </div>
+            <div class="trend-item">
+              <img
+                src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500"
+                alt="Trend 1"
+              />
+              <div class="trend-overlay"><p>انتى العيد وانتى فرحتى❤️</p></div>
+            </div>
+            <div class="trend-item">
+              <img
+                src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500"
+                alt="Trend 1"
+              />
+              <div class="trend-overlay"><p>ببص فى عينيك بنسى الدنيا❤️</p></div>
+            </div>
+            <div class="trend-item">
+              <img
+                src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500"
+                alt="Trend 1"
+              />
+              <div class="trend-overlay"><p>ما هو مفيش جمال كدا برضو❤️</p></div>
+            </div>
+            <div class="trend-item">
+              <img
+                src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500"
+                alt="Trend 1"
+              />
+              <div class="trend-overlay"><p>اكسجين ياجدعان❤️</p></div>
+            </div>
+            <div class="trend-item">
+              <img
+                src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500"
+                alt="Trend 1"
+              />
+              <div class="trend-overlay"><p>موزتى حقها تدلع ❤️</p></div>
+            </div>
+            <div class="trend-item">
+              <img
+                src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500"
+                alt="Trend 1"
+              />
+              <div class="trend-overlay"><p>بحبك دى قليلة اوى عليكى ❤️</p></div>
+            </div>
+        </section>
+
+        <div class="section-divider">
+          <div class="line"></div>
+          <div class="divider-heart">❤️</div>
+          <div class="line"></div>
+        </div>
+        <button class="magic-btn" id="openPopup">دوسي هنا للنهاية 😉</button>
+        <footer>
+          Designed with ❤️ by <span class="designer-name">Marco Zakaria</span>
+        </footer>
+      </div>
+    </div>
+
+    <div class="modal" id="modal">
+      <div class="modal-content">
+        <div id="typing-text"></div>
+        <button
+          onclick="document.getElementById('modal').style.display = 'none'"
+          style="
+            margin-top: 35px;
+            background: var(--primary-pink);
+            border: none;
+            color: white;
+            padding: 12px 35px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: Alexandria;
+          "
+        >
+          قفل يا روحي ❤️
+        </button>
+      </div>
+    </div>
+
+    <script>
+      // === منطق التحميل والباسورد ===
+      window.onload = () => {
+        setTimeout(() => {
+          document.getElementById("preloader").style.opacity = "0";
+          setTimeout(() => {
+            document.getElementById("preloader").style.display = "none";
+            const login = document.getElementById("login-screen");
+            login.style.display = "flex";
+            setTimeout(() => {
+              login.style.opacity = "1";
+              document.getElementById("char1").focus();
+            }, 50);
+          }, 1000);
+        }, 3000);
+      };
+
+      const inputs = document.querySelectorAll(".pass-input");
+      const passwordCorrect = "LOVE";
+
+      inputs.forEach((input, index) => {
+        input.addEventListener("input", (e) => {
+          const value = e.target.value.toUpperCase();
+          e.target.value = value;
+          if (value) {
+            input.classList.add("active");
+            if (index < inputs.length - 1) inputs[index + 1].focus();
+            else checkPassword();
+          } else {
+            input.classList.remove("active");
+          }
+        });
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Backspace" && !input.value && index > 0) {
+            inputs[index - 1].focus();
+            inputs[index - 1].value = "";
+            inputs[index - 1].classList.remove("active");
+          }
+        });
+      });
+
+      function checkPassword() {
+        let currentPass = "";
+        inputs.forEach((input) => (currentPass += input.value));
+        if (currentPass === passwordCorrect) {
+          document.getElementById("login-screen").style.opacity = "0";
+          setTimeout(() => {
+            document.getElementById("login-screen").style.display = "none";
+            document.getElementById("main-content").style.display = "block";
+            document.body.style.overflow = "auto";
+            setTimeout(() => {
+              document.getElementById("main-content").style.opacity = "1";
+            }, 50);
+            initStars();
+            startTimer();
+          }, 1000);
+        } else {
+          document.getElementById("error-msg").style.display = "block";
+          inputs.forEach((input) => {
+            input.value = "";
+            input.classList.remove("active");
+          });
+          inputs[0].focus();
+        }
+      }
+
+      // === باقي الدوال ===
+      function initStars() {
+        const sc = document.getElementById("star-container");
+        for (let i = 0; i < 70; i++) {
+          const s = document.createElement("div");
+          s.className = "star";
+          s.style.left = Math.random() * 100 + "%";
+          s.style.top = Math.random() * 100 + "%";
+          s.style.width = s.style.height = Math.random() * 2 + 1 + "px";
+          s.style.setProperty("--t", Math.random() * 3 + 2 + "s");
+          sc.appendChild(s);
+        }
+      }
+
+      function startTimer() {
+        const start = new Date("April 4, 2021 00:00:00").getTime();
+        setInterval(() => {
+          const diff = new Date().getTime() - start;
+          document.getElementById("years").innerText = Math.floor(
+            diff / 31557600000,
+          );
+          document.getElementById("months").innerText = Math.floor(
+            (diff % 31557600000) / 2629800000,
+          );
+          document.getElementById("days").innerText = Math.floor(
+            (diff % 2629800000) / 86400000,
+          );
+          document.getElementById("hours").innerText = Math.floor(
+            (diff % 86400000) / 3600000,
+          );
+          document.getElementById("minutes").innerText = Math.floor(
+            (diff % 3600000) / 60000,
+          );
+          document.getElementById("seconds").innerText = Math.floor(
+            (diff % 60000) / 1000,
+          );
+        }, 1000);
+      }
+
+      const msg =
+        "يا نودي، انتي أجمل حقيقة في حياتي.. العيد ده وكل عيد وإحنا سوا مع بعض، وربنا يخليكي ليا يا أغلى إنسانة في الدنيا. بحبك لآخر العمر! ❤️✨";
+      document.getElementById("openPopup").onclick = () => {
+        document.getElementById("modal").style.display = "flex";
+        const t = document.getElementById("typing-text");
+        t.innerHTML = "";
+        let i = 0;
+        const type = () => {
+          if (i < msg.length) {
+            t.innerHTML += msg.charAt(i++);
+            setTimeout(type, 50);
+          }
+        };
+        type();
+      };
+    </script>
+  </body>
+</html>
